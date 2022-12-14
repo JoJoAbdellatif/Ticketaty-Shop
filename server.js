@@ -38,3 +38,44 @@ app.get('/matches', (req, res) => {
         res.status(500).json({error: 'Could not fetch the matches'})
       })
   })
+
+
+  app.get('/matches/:id', (req, res) => {
+
+    if (ObjectId.isValid(req.params.id)) {
+  
+      db.collection('Matches')
+        .findOne({_id: new ObjectId(req.params.id)})
+        .then(doc => {
+          res.status(200).json(doc)
+        })
+        .catch(err => {
+          res.status(500).json({error: 'Could not fetch the matches'})
+        })
+        
+    } else {
+      res.status(500).json({error: 'Could not fetch the matches'})
+    }
+  
+  })
+
+  app.patch('/reserveMatch', async(req, res) => {
+    const {matchNumber,tickets:{catego1ry,quantity}} = req.body
+
+    match = await db.collection('Matches')
+    .findOne({matchNumber: matchNumber})
+    .then(doc => {
+        res.status(200).json(doc)
+      })
+    .catch(err => {
+        res.status(500).json({error: 'Could not fetch the matches'})
+      })
+      
+    
+  })
+
+  app.patch('/cancelledMatch', (req, res) => {
+    const updates = req.body
+    
+    
+  })
