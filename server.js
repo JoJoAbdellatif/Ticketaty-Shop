@@ -60,22 +60,49 @@ app.get('/matches', (req, res) => {
   })
 
   app.patch('/reserveMatch', async(req, res) => {
-    const {matchNumber,tickets:{catego1ry,quantity}} = req.body
+    const {matchNumber,ticket:{category,quantity}} = req.body
 
-    match = await db.collection('Matches')
-    .findOne({matchNumber: matchNumber})
-    .then(doc => {
-        res.status(200).json(doc)
-      })
-    .catch(err => {
-        res.status(500).json({error: 'Could not fetch the matches'})
-      })
-      
+    match = await db.collection('Matches').findOne({matchNumber: matchNumber})
+
+    
+
+    if(category == 1){
+        newVal = match.availability.category1.count - quantity
+        db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category1.count":newVal}})
+    }
+    if(category == 2){
+        newVal = match.availability.category2.count - quantity
+        db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category2.count":newVal}})
+    }
+    if(category == 3){
+        newVal = match.availability.category3.count - quantity
+        db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category3.count":newVal}})
+    }
+        
+    res.json(match)
     
   })
 
-  app.patch('/cancelledMatch', (req, res) => {
-    const updates = req.body
+  app.patch('/cancelledMatch', async(req, res) => {
+    const {matchNumber,ticket:{category,quantity}} = req.body
+
+    match = await db.collection('Matches').findOne({matchNumber: matchNumber})
+
     
+
+    if(category == 1){
+        newVal = match.availability.category1.count + quantity
+        db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category1.count":newVal}})
+    }
+    if(category == 2){
+        newVal = match.availability.category2.count + quantity
+        db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category2.count":newVal}})
+    }
+    if(category == 3){
+        newVal = match.availability.category3.count + quantity
+        db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category3.count":newVal}})
+    }
+        
+    res.json(match)
     
   })
