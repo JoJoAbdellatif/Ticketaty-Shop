@@ -5,9 +5,9 @@ let dbConnection
 
 module.exports = {
   connectToDb: (cb) => {
-    MongoClient.connect()
+    MongoClient.connect(process.env.DBCONNECTION)
       .then(client => {
-        dbConnection = client.db(process.env.DBCONNECTION)
+        dbConnection = client.db()
         return cb()
       })
       .catch(err => {
