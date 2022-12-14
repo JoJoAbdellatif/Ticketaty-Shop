@@ -8,7 +8,7 @@ module.exports = {
     MongoClient.connect(process.env.DBCONNECTION)
       .then(client => {
         dbConnection = client.db()
-        return cb()
+        return cb() 
       })
       .catch(err => {
         console.log(err)
