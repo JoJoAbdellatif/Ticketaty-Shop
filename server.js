@@ -18,7 +18,7 @@ connectToDb((err) => {
   }
 })
 
-
+// Get 10 matches per page
 app.get('/matches', (req, res) => {
     // current page
     const page = req.query.p || 0
@@ -39,7 +39,7 @@ app.get('/matches', (req, res) => {
       })
   })
 
-
+// Get match by id
   app.get('/matches/:id', (req, res) => {
 
     if (ObjectId.isValid(req.params.id)) {
@@ -59,6 +59,7 @@ app.get('/matches', (req, res) => {
   
   })
 
+  //Reserve a ticket
   app.patch('/reserveMatch', async(req, res) => {
     const {matchNumber,ticket:{category,quantity}} = req.body
 
@@ -83,6 +84,7 @@ app.get('/matches', (req, res) => {
     
   })
 
+  //Cancell a ticket
   app.patch('/cancelledMatch', async(req, res) => {
     const {matchNumber,ticket:{category,quantity}} = req.body
 
@@ -103,6 +105,28 @@ app.get('/matches', (req, res) => {
         db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category3.count":newVal}})
     }
         
-    res.json(match)
+    res.status(200).json(match)
     
   })
+
+  //Get match by name
+
+  app.get('/search/:team', (req, res) => {
+  
+    const team = req.params.team
+    const regex = new RegExp(team, 'i') 
+
+    let matches = []
+  
+    db.collection('Matches')
+      .find({$or:[{awayTeam: regex}, {homeTeam: regex}]})
+      .forEach(match => matches.push(match))
+      .then(() => {
+        res.status(200).json(matches)
+      })
+      .catch(() => {
+        res.status(500).json({error: 'Could not fetch the matches'})
+      })
+  })
+
+  
