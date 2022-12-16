@@ -58,8 +58,9 @@ app.get('/matches', (req, res) => {
     }
   
   })
-    //Pending a ticket
-    app.patch('/pendingMatch', async(req, res) => {
+
+  //Pending a ticket
+    app.patch('/pendingMatch', async(req, res) => { 
       const {matchNumber,ticket:{category,quantity}} = req.body
   
       match = await db.collection('Matches').findOne({matchNumber: matchNumber})
@@ -67,34 +68,61 @@ app.get('/matches', (req, res) => {
   
       if(category == 1){
           if(match.availability.category1.pending === 0){
-              res.json({err:"All tickets reserved"})
+              res.status(403).json({err:"All tickets reserved"})
+          }
+          else{
+            if(quantity > match.availability.category1.pending){
+              res.status(403).json({err:"Too much tickets"}) 
+            }
+            else{
+              newVal = match.availability.category1.pending - quantity
+              db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category1.pending":newVal}})
+
+              match = await db.collection('Matches').findOne({matchNumber: matchNumber})
+              res.json(match)
+            }
           }
 
-          if(quantity > match.availability.category1.pending){
-            res.json({err:"Too much tickets"}) 
-          }
-          newVal = match.availability.category1.pending - quantity
-          db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category1.pending":newVal}})
       }
+
       if(category == 2){
-        if(match.availability.category2.pending !== 0){
-          newVal = match.availability.category2.pending - quantity
-          db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category2.pending":newVal}})
+        if(match.availability.category2.pending === 0){
+            res.status(403).json({err:"All tickets reserved"})
         }
         else{
-          res.json({err:"All tickets reserved"})
+          if(quantity > match.availability.category2.pending){
+            res.status(403).json({err:"Too much tickets"}) 
+          }
+          else{
+            newVal = match.availability.category2.pending - quantity
+            db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category2.pending":newVal}})
+
+            match = await db.collection('Matches').findOne({matchNumber: matchNumber})
+            res.json(match)
+          }
         }
+
+    }
+
+    if(category == 3){
+      if(match.availability.category3.pending === 0){
+          res.status(403).json({err:"All tickets reserved"})
       }
-      if(category == 3){
-        if(match.availability.category3.pending !== 0){
+      else{
+        if(quantity > match.availability.category3.pending){
+          res.status(403).json({err:"Too much tickets"}) 
+        }
+        else{
           newVal = match.availability.category3.pending - quantity
           db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category3.pending":newVal}})
-        }
-        else{
-          res.json({err:"All tickets reserved"})
+
+          match = await db.collection('Matches').findOne({matchNumber: matchNumber})
+          res.json(match)
         }
       }
-          
+
+  }
+      
       
     })
 
@@ -107,37 +135,74 @@ app.get('/matches', (req, res) => {
     
 
     if(category == 1){
-      if(match.availability.category1.count !== 0){
-        newVal = match.availability.category1.count - quantity
-        db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category1.count":newVal}})
+      if(match.availability.category1.count === 0){
+        res.status(403).json({err:"All tickets Sold"})
       }
       else{
-        res.json({err:"All tickets Sold"})
+        if(match.availability.category1.count < quantity){
+          res.status(403).json({err:"Not enough tickets"})
+        }
+        else{
+          if(match.availability.category1.count <= match.availability.category1.pending){
+            res.status(403).json({err:"Sorry the ticket have to be pending first"})
+          }
+          else{
+            newVal = match.availability.category1.count - quantity
+            db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category1.count":newVal}})
+      
+            match = await db.collection('Matches').findOne({matchNumber: matchNumber})
+            res.json(match)
+          }
+        }
       }
-
     }
+
     if(category == 2){
-      if(match.availability.category2.count !== 0){
-        newVal = match.availability.category2.count - quantity
-        db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category2.count":newVal}})
+      if(match.availability.category2.count === 0){
+        res.status(403).json({err:"All tickets Sold"})
       }
       else{
-        res.json({err:"All tickets Sold"})
+        if(match.availability.category2.count < quantity){
+          res.status(403).json({err:"Not enough tickets"})
+        }
+        else{
+          if(match.availability.category2.count <= match.availability.category2.pending){
+            res.status(403).json({err:"Sorry the ticket have to be pending first"})
+          }
+          else{
+            newVal = match.availability.category2.count - quantity
+            db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category2.count":newVal}})
+      
+            match = await db.collection('Matches').findOne({matchNumber: matchNumber})
+            res.json(match)
+          }
+        }
       }
-
     }
+
     if(category == 3){
-      if(match.availability.category3.count !== 0){
-        newVal = match.availability.category3.count - quantity
-        db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category3.count":newVal}})
+      if(match.availability.category3.count === 0){
+        res.status(403).json({err:"All tickets Sold"})
       }
       else{
-        res.json({err:"All tickets Sold"})
+        if(match.availability.category3.count < quantity){
+          res.status(403).json({err:"Not enough tickets"})
+        }
+        else{
+          if(match.availability.category3.count <= match.availability.category3.pending){
+            res.status(403).json({err:"Sorry the ticket have to be pending first"})
+          }
+          else{
+            newVal = match.availability.category3.count - quantity
+            db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category3.count":newVal}})
+      
+            match = await db.collection('Matches').findOne({matchNumber: matchNumber})
+            res.json(match)
+          }
+        }
       }
-
     }
         
-    res.json(match)
     
   })
 
@@ -150,20 +215,51 @@ app.get('/matches', (req, res) => {
     
 
     if(category == 1){
+      
+      if(match.availability.category1.count < match.availability.category1.pending + quantity){
+        res.status(403).json({err:"Trying to cancel a non existing ticket"})
+      }
+      else{
         newVal = match.availability.category1.pending + quantity
         db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category1.pending":newVal}})
+
+        match = await db.collection('Matches').findOne({matchNumber: matchNumber})
+        res.json(match)
+      }
+      
     }
+
     if(category == 2){
+      
+      if(match.availability.category2.count < match.availability.category2.pending + quantity){
+        res.status(403).json({err:"Trying to cancel a non existing ticket"})
+      }
+      else{
         newVal = match.availability.category2.pending + quantity
         db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category2.pending":newVal}})
+
+        match = await db.collection('Matches').findOne({matchNumber: matchNumber})
+        res.json(match)
+      }
+      
     }
+
     if(category == 3){
+      
+      if(match.availability.category3.count < match.availability.category3.pending + quantity){
+        res.status(403).json({err:"Trying to cancel a non existing ticket"})
+      }
+      else{
         newVal = match.availability.category3.pending + quantity
         db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category3.pending":newVal}})
+
+        match = await db.collection('Matches').findOne({matchNumber: matchNumber})
+        res.json(match)
+      }
+      
     }
-        
-    res.status(200).json(match)
-    
+
+            
   })
 
   //Get match by name
