@@ -58,6 +58,45 @@ app.get('/matches', (req, res) => {
     }
   
   })
+    //Pending a ticket
+    app.patch('/pendingMatch', async(req, res) => {
+      const {matchNumber,ticket:{category,quantity}} = req.body
+  
+      match = await db.collection('Matches').findOne({matchNumber: matchNumber})
+  
+  
+      if(category == 1){
+          if(match.availability.category1.pending !== 0){
+            newVal = match.availability.category1.pending - quantity
+            db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category1.pending":newVal}})
+          }
+          else{
+            res.json({err:"All tickets reserved"})
+          }
+
+      }
+      if(category == 2){
+        if(match.availability.category2.pending !== 0){
+          newVal = match.availability.category2.pending - quantity
+          db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category2.pending":newVal}})
+        }
+        else{
+          res.json({err:"All tickets reserved"})
+        }
+      }
+      if(category == 3){
+        if(match.availability.category3.pending !== 0){
+          newVal = match.availability.category3.pending - quantity
+          db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category3.pending":newVal}})
+        }
+        else{
+          res.json({err:"All tickets reserved"})
+        }
+      }
+          
+      res.json(match)
+      
+    })
 
   //Reserve a ticket
   app.patch('/reserveMatch', async(req, res) => {
@@ -68,16 +107,34 @@ app.get('/matches', (req, res) => {
     
 
     if(category == 1){
+      if(match.availability.category1.count !== 0){
         newVal = match.availability.category1.count - quantity
         db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category1.count":newVal}})
+      }
+      else{
+        res.json({err:"All tickets Sold"})
+      }
+
     }
     if(category == 2){
+      if(match.availability.category2.count !== 0){
         newVal = match.availability.category2.count - quantity
         db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category2.count":newVal}})
+      }
+      else{
+        res.json({err:"All tickets Sold"})
+      }
+
     }
     if(category == 3){
+      if(match.availability.category3.count !== 0){
         newVal = match.availability.category3.count - quantity
         db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category3.count":newVal}})
+      }
+      else{
+        res.json({err:"All tickets Sold"})
+      }
+
     }
         
     res.json(match)
@@ -93,16 +150,16 @@ app.get('/matches', (req, res) => {
     
 
     if(category == 1){
-        newVal = match.availability.category1.count + quantity
-        db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category1.count":newVal}})
+        newVal = match.availability.category1.pending + quantity
+        db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category1.pending":newVal}})
     }
     if(category == 2){
-        newVal = match.availability.category2.count + quantity
-        db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category2.count":newVal}})
+        newVal = match.availability.category2.pending + quantity
+        db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category2.pending":newVal}})
     }
     if(category == 3){
-        newVal = match.availability.category3.count + quantity
-        db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category3.count":newVal}})
+        newVal = match.availability.category3.pending + quantity
+        db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category3.pending":newVal}})
     }
         
     res.status(200).json(match)
@@ -116,7 +173,7 @@ app.get('/matches', (req, res) => {
     const team = req.params.team
     const regex = new RegExp(team, 'i') 
 
-    let matches = []
+    let matches = []  
   
     db.collection('Matches')
       .find({$or:[{awayTeam: regex}, {homeTeam: regex}]})
