@@ -66,14 +66,15 @@ app.get('/matches', (req, res) => {
   
   
       if(category == 1){
-          if(match.availability.category1.pending !== 0){
-            newVal = match.availability.category1.pending - quantity
-            db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category1.pending":newVal}})
-          }
-          else{
-            res.json({err:"All tickets reserved"})
+          if(match.availability.category1.pending === 0){
+              res.json({err:"All tickets reserved"})
           }
 
+          if(quantity > match.availability.category1.pending){
+            res.json({err:"Too much tickets"}) 
+          }
+          newVal = match.availability.category1.pending - quantity
+          db.collection('Matches').updateOne({matchNumber: matchNumber},{$set: {"availability.category1.pending":newVal}})
       }
       if(category == 2){
         if(match.availability.category2.pending !== 0){
@@ -94,7 +95,6 @@ app.get('/matches', (req, res) => {
         }
       }
           
-      res.json(match)
       
     })
 
