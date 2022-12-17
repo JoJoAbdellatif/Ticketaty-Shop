@@ -72,7 +72,7 @@ app.get('/matches', (req, res) => {
 
         if(category == 1){
           if(match.availability.category1.pending === 0){
-              err = "All tickets reserved"
+              err = "All tickets reserved" 
               // res.status(403).json({err:"All tickets reserved"})
               break
           }
