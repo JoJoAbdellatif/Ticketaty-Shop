@@ -1,5 +1,5 @@
 const request = require("supertest")
-const matchApiStub = require('../match.stub.json');
+const matchApiStub = require('./match.stub.json');
 const baseURL = "http://localhost:3000"
 
 const matchId = "639c7980d4aadd7d8786182a"
