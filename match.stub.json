@@ -1,0 +1,29 @@
+{
+    "_id":"639c7980d4aadd7d8786182a",
+    "matchNumber":6,
+    "roundNumber":1,
+    "dateUtc":"2022-11-22T13:00:00Z",
+    "location":"Education City Stadium",
+    "availability":{
+            "category1":{
+                "count":20,
+                "price":75,
+                "pending":20
+            },
+            "category2":{
+                "count":20,
+                "price":125,
+                "pending":20
+            },
+            "category3":{
+                "count":20,
+                "price":195,
+                "pending":20
+            }
+    },
+    "homeTeam":"Denmark",
+    "homeTeamFlag":"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Flag_of_Denmark.svg/640px-Flag_of_Denmark.svg.png ",
+    "awayTeam":"Tunisia",
+    "awayTeamFlag":"https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Flag_of_Tunisia.svg/2560px-Flag_of_Tunisia.svg.png",
+    "group":"D"
+}
