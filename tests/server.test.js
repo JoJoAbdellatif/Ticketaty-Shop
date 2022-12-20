@@ -10,6 +10,12 @@ describe("GET Matches",()=>{
 
     })
 
+    it("Should return 500", async()=>{
+        const response = await request(baseURL).get(`/matches/one`);
+        expect(response.statusCode).toBe(500);
+
+    })
+
     it("Should be equal to the first match", async()=>{
         const response = await request(baseURL).get(`/matches/${matchApiStub[0]._id}`);
         expect(response.body).toEqual(matchApiStub[0]); 
