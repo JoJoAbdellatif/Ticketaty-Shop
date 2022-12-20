@@ -73,13 +73,11 @@ app.get('/matches', (req, res) => {
         if(category == 1){
           if(match.availability.category1.pending === 0){
               err = "All tickets reserved"
-              // res.status(403).json({err:"All tickets reserved"})
               break
           }
           else{
             if(quantity > match.availability.category1.pending){
               err = "Too much tickets"
-              // res.status(403).json({err:"Too much tickets"}) 
               break
             }
             else{
@@ -93,13 +91,11 @@ app.get('/matches', (req, res) => {
       if(category == 2){
           if(match.availability.category2.pending === 0){
               err = "All tickets reserved"
-              // res.status(403).json({err:"All tickets reserved"})
               break
           }
           else{
             if(quantity > match.availability.category2.pending){
               err = "Too much tickets"
-              // res.status(403).json({err:"Too much tickets"})
               break
             }
             else{
@@ -113,13 +109,11 @@ app.get('/matches', (req, res) => {
       if(category == 3){
         if(match.availability.category3.pending === 0){
             err = "All tickets reserved"
-            // res.status(403).json({err:"All tickets reserved"})
             break
         }
         else{
           if(quantity > match.availability.category3.pending){
             err = "Too much tickets"
-            // res.status(403).json({err:"Too much tickets"}) 
             break
           }
           else{
