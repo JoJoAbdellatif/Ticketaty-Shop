@@ -1,5 +1,6 @@
 const express = require('express')
 const { getDb, connectToDb } = require('./dbConnection/db')
+const {corsHeaders} = require('./middlewares/cors');
 const { ObjectId } = require('mongodb')
 
 const app = express()
@@ -19,7 +20,7 @@ connectToDb((err) => {
 })
 
 // Get 10 matches per page
-app.get('/matches', (req, res) => {
+app.get('/matches', corsHeaders ,(req, res) => {
     // current page
     const page = req.query.p || 0
     const matchesPerPage = 10
@@ -40,7 +41,7 @@ app.get('/matches', (req, res) => {
   })
 
 // Get match by id
-  app.get('/matches/:id', (req, res) => {
+  app.get('/matches/:id' , corsHeaders , (req, res) => {
 
     if (ObjectId.isValid(req.params.id)) {
   
@@ -292,7 +293,7 @@ app.get('/matches', (req, res) => {
 
   //Get match by name
 
-  app.get('/search/:team', (req, res) => {
+  app.get('/search/:team'  , corsHeaders , (req, res) => {
   
     const team = req.params.team
     const regex = new RegExp(team, 'i') 
