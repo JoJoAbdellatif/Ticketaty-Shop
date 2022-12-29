@@ -2,6 +2,7 @@ const express = require("express");
 const { getDb, connectToDb } = require("./dbConnection/db");
 const { corsHeaders } = require("./middlewares/cors");
 const { ObjectId } = require("mongodb");
+const axios = require("axios");
 
 const app = express();
 app.use(express.json());
@@ -44,7 +45,13 @@ app.get("/matches/:id", corsHeaders, (req, res) => {
   if (ObjectId.isValid(req.params.id)) {
     db.collection("Matches")
       .findOne({ _id: new ObjectId(req.params.id) })
-      .then((doc) => {
+      .then(async(doc) => {
+        const homeTeamFlag = await axios.get(`http://localhost:3000/flag/${doc.homeTeam}`)
+        const awayTeamFlag = await axios.get(`http://localhost:3000/flag/${doc.homeTeam}`)
+
+        doc.homeTeamFlag = homeTeamFlag.data
+        doc.awayTeamFlag = awayTeamFlag.data
+
         res.status(200).json(doc);
       })
       .catch((err) => {
@@ -308,5 +315,17 @@ app.get("/search/:team", corsHeaders, (req, res) => {
     })
     .catch(() => {
       res.status(500).json({ error: "Could not fetch the matches" });
+    });
+});
+
+app.get("/flag/:team", (req, res) => {
+  const team = req.params.team;
+  db.collection("Flags")
+    .findOne({ name: team })
+    .then((doc) => {
+      res.status(200).json(doc.flag);
+    })
+    .catch((err) => {
+      res.status(500).json({ error: "Could not fetch the flag" });
     });
 });
