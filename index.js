@@ -22,7 +22,7 @@ connectToDb((err) => {
 });
 
 // Get 10 matches per page
-app.get("/matches", corsHeaders, async(req, res) => {
+app.get("/matches", corsHeaders, async (req, res) => {
   // current page
   const page = req.query.p || 0;
   const matchesPerPage = 7;
@@ -34,15 +34,15 @@ app.get("/matches", corsHeaders, async(req, res) => {
     .skip(page * matchesPerPage)
     .limit(matchesPerPage)
     .forEach(async (match) => matches.push(match))
-    .then(async() => {
-      for(let i=0;i<matches.length;i++){
+    .then(async () => {
+      for (let i = 0; i < matches.length; i++) {
         const homeTeamFlag = await axios.get(flagUrl + matches[i].homeTeam)
         const awayTeamFlag = await axios.get(flagUrl + matches[i].awayTeam)
 
         matches[i].homeTeamFlag = homeTeamFlag.data
         matches[i].awayTeamFlag = awayTeamFlag.data
       }
-      
+
       res.status(200).json(matches);
     })
     .catch(() => {
@@ -55,7 +55,7 @@ app.get("/matches/:id", corsHeaders, (req, res) => {
   if (ObjectId.isValid(req.params.id)) {
     db.collection("Matches")
       .findOne({ _id: new ObjectId(req.params.id) })
-      .then(async(doc) => {
+      .then(async (doc) => {
         const homeTeamFlag = await axios.get(flagUrl + doc.homeTeam)
         const awayTeamFlag = await axios.get(flagUrl + doc.awayTeam)
 
@@ -252,60 +252,60 @@ app.patch("/cancellMatch", async (req, res) => {
 
   match = await db.collection("Matches").findOne({ matchNumber: matchNumber });
 
-    if (category == 1) {
-      if (
-        quantity > match.availability.category1.pending  
-      ) {
-        res.status(500).json({ message: "Trying to cancel a non existing ticket" });
-      } else {
-        newVal = match.availability.category1.pending - quantity;
-        db.collection("Matches").updateOne(
-          { matchNumber: matchNumber },
-          { $set: { "availability.category1.pending": newVal } }
-        );
-        match = await db
-          .collection("Matches")
-          .findOne({ matchNumber: matchNumber });
+  if (category == 1) {
+    if (
+      quantity > match.availability.category1.pending
+    ) {
+      res.status(500).json({ message: "Trying to cancel a non existing ticket" });
+    } else {
+      newVal = match.availability.category1.pending - quantity;
+      db.collection("Matches").updateOne(
+        { matchNumber: matchNumber },
+        { $set: { "availability.category1.pending": newVal } }
+      );
+      match = await db
+        .collection("Matches")
+        .findOne({ matchNumber: matchNumber });
 
-        res.status(200).json(match);
-      }
+      res.status(200).json(match);
     }
-    if (category == 2) {
-      if (
-        quantity > match.availability.category2.pending  
-      ) {
-        res.status(500).json({ message: "Trying to cancel a non existing ticket" });
-      } else {
-        newVal = match.availability.category2.pending - quantity;
-        db.collection("Matches").updateOne(
-          { matchNumber: matchNumber },
-          { $set: { "availability.category2.pending": newVal } }
-        );
-        match = await db
-          .collection("Matches")
-          .findOne({ matchNumber: matchNumber });
+  }
+  if (category == 2) {
+    if (
+      quantity > match.availability.category2.pending
+    ) {
+      res.status(500).json({ message: "Trying to cancel a non existing ticket" });
+    } else {
+      newVal = match.availability.category2.pending - quantity;
+      db.collection("Matches").updateOne(
+        { matchNumber: matchNumber },
+        { $set: { "availability.category2.pending": newVal } }
+      );
+      match = await db
+        .collection("Matches")
+        .findOne({ matchNumber: matchNumber });
 
-        res.status(200).json(match);
-      }
+      res.status(200).json(match);
     }
-    if (category == 3) {
-      if (
-        quantity > match.availability.category1.pending  
-      ) {
-        res.status(500).json({ message: "Trying to cancel a non existing ticket" });
-      } else {
-        newVal = match.availability.category3.pending - quantity;
-        db.collection("Matches").updateOne(
-          { matchNumber: matchNumber },
-          { $set: { "availability.category3.pending": newVal } }
-        );
-        match = await db
-          .collection("Matches")
-          .findOne({ matchNumber: matchNumber });
+  }
+  if (category == 3) {
+    if (
+      quantity > match.availability.category1.pending
+    ) {
+      res.status(500).json({ message: "Trying to cancel a non existing ticket" });
+    } else {
+      newVal = match.availability.category3.pending - quantity;
+      db.collection("Matches").updateOne(
+        { matchNumber: matchNumber },
+        { $set: { "availability.category3.pending": newVal } }
+      );
+      match = await db
+        .collection("Matches")
+        .findOne({ matchNumber: matchNumber });
 
-        res.status(200).json(match);
-      }
+      res.status(200).json(match);
     }
+  }
 
 });
 
