@@ -3,6 +3,8 @@ const { getDb, connectToDb } = require("./dbConnection/db");
 const { corsHeaders } = require("./middlewares/cors");
 const { ObjectId } = require("mongodb");
 const axios = require("axios");
+const flagUrl = 'http://localhost:3000/flag/'
+
 
 const app = express();
 app.use(express.json());
@@ -20,10 +22,10 @@ connectToDb((err) => {
 });
 
 // Get 10 matches per page
-app.get("/matches", corsHeaders, (req, res) => {
+app.get("/matches", corsHeaders, async(req, res) => {
   // current page
   const page = req.query.p || 0;
-  const matchesPerPage = 10;
+  const matchesPerPage = 7;
 
   let matches = [];
 
@@ -31,8 +33,16 @@ app.get("/matches", corsHeaders, (req, res) => {
     .find()
     .skip(page * matchesPerPage)
     .limit(matchesPerPage)
-    .forEach((match) => matches.push(match))
-    .then(() => {
+    .forEach(async (match) => matches.push(match))
+    .then(async() => {
+      for(let i=0;i<matches.length;i++){
+        const homeTeamFlag = await axios.get(flagUrl + matches[i].homeTeam)
+        const awayTeamFlag = await axios.get(flagUrl + matches[i].awayTeam)
+
+        matches[i].homeTeamFlag = homeTeamFlag.data
+        matches[i].awayTeamFlag = awayTeamFlag.data
+      }
+      
       res.status(200).json(matches);
     })
     .catch(() => {
@@ -46,8 +56,8 @@ app.get("/matches/:id", corsHeaders, (req, res) => {
     db.collection("Matches")
       .findOne({ _id: new ObjectId(req.params.id) })
       .then(async(doc) => {
-        const homeTeamFlag = await axios.get(`http://localhost:3000/flag/${doc.homeTeam}`)
-        const awayTeamFlag = await axios.get(`http://localhost:3000/flag/${doc.homeTeam}`)
+        const homeTeamFlag = await axios.get(flagUrl + doc.homeTeam)
+        const awayTeamFlag = await axios.get(flagUrl + doc.awayTeam)
 
         doc.homeTeamFlag = homeTeamFlag.data
         doc.awayTeamFlag = awayTeamFlag.data
@@ -326,6 +336,13 @@ app.get("/flag/:team", (req, res) => {
       res.status(200).json(doc.flag);
     })
     .catch((err) => {
-      res.status(500).json({ error: "Could not fetch the flag" });
+      db.collection('Flags')
+        .findOne({ name: 'TBA' })
+        .then((doc) => {
+          res.status(200).json(doc.flag);
+        })
+        .catch((err) => {
+          res.status(500).json({ error: "Could not fetch the flag" });
+        })
     });
 });
