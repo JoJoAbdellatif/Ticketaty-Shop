@@ -3,7 +3,7 @@ const { getDb, connectToDb } = require("./dbConnection/db");
 const { corsHeaders } = require("./middlewares/cors");
 const { ObjectId } = require("mongodb");
 const axios = require("axios");
-const flagUrl = 'http://localhost:3000/flag/'
+const flagUrl = 'https://ticketaty-shop.vercel.app/flag/'
 
 
 const app = express();
