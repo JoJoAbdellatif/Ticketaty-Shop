@@ -166,23 +166,30 @@ app.patch("/reserveMatch", async (req, res) => {
       if (match.availability.category1.available < quantity) {
         res.status(500).json({ message: "Not enough tickets" });
       } else {
-        newValAvailable = match.availability.category1.available - quantity;
-        newValPending = match.availability.category1.pending - quantity;
+        if (match.availability.category1.pending === 0) {
+          res.status(500).json({ message: "Pend a ticket first" });
 
-        db.collection("Matches").updateOne(
-          { matchNumber: matchNumber },
-          { $set: { "availability.category1.available": newValAvailable } }
-        );
+        }
+        else {
+          newValAvailable = match.availability.category1.available - quantity;
+          newValPending = match.availability.category1.pending - quantity;
 
-        db.collection("Matches").updateOne(
-          { matchNumber: matchNumber },
-          { $set: { "availability.category1.pending": newValPending } }
-        );
-        match = await db
-          .collection("Matches")
-          .findOne({ matchNumber: matchNumber });
+          db.collection("Matches").updateOne(
+            { matchNumber: matchNumber },
+            { $set: { "availability.category1.available": newValAvailable } }
+          );
 
-        res.status(200).json(match);
+          db.collection("Matches").updateOne(
+            { matchNumber: matchNumber },
+            { $set: { "availability.category1.pending": newValPending } }
+          );
+          match = await db
+            .collection("Matches")
+            .findOne({ matchNumber: matchNumber });
+
+          res.status(200).json(match);
+        }
+
       }
     }
   }
@@ -194,23 +201,30 @@ app.patch("/reserveMatch", async (req, res) => {
       if (match.availability.category2.available < quantity) {
         res.status(500).json({ message: "Not enough tickets" });
       } else {
-        newValAvailable = match.availability.category2.available - quantity;
-        newValPending = match.availability.category2.pending - quantity;
+        if (match.availability.category1.pending === 0) {
+          res.status(500).json({ message: "Pend a ticket first" });
 
-        db.collection("Matches").updateOne(
-          { matchNumber: matchNumber },
-          { $set: { "availability.category2.available": newValAvailable } }
-        );
+        }
+        else {
+          newValAvailable = match.availability.category2.available - quantity;
+          newValPending = match.availability.category2.pending - quantity;
 
-        db.collection("Matches").updateOne(
-          { matchNumber: matchNumber },
-          { $set: { "availability.category2.pending": newValPending } }
-        );
-        match = await db
-          .collection("Matches")
-          .findOne({ matchNumber: matchNumber });
+          db.collection("Matches").updateOne(
+            { matchNumber: matchNumber },
+            { $set: { "availability.category2.available": newValAvailable } }
+          );
 
-        res.status(200).json(match);
+          db.collection("Matches").updateOne(
+            { matchNumber: matchNumber },
+            { $set: { "availability.category2.pending": newValPending } }
+          );
+          match = await db
+            .collection("Matches")
+            .findOne({ matchNumber: matchNumber });
+
+          res.status(200).json(match);
+        }
+
       }
     }
   }
@@ -222,23 +236,30 @@ app.patch("/reserveMatch", async (req, res) => {
       if (match.availability.category3.available < quantity) {
         res.status(500).json({ message: "Not enough tickets" });
       } else {
-        newValAvailable = match.availability.category3.available - quantity;
-        newValPending = match.availability.category3.pending - quantity;
+        if (match.availability.category3.pending === 0) {
+          res.status(500).json({ message: "Pend a ticket first" });
 
-        db.collection("Matches").updateOne(
-          { matchNumber: matchNumber },
-          { $set: { "availability.category3.available": newValAvailable } }
-        );
+        }
+        else {
+          newValAvailable = match.availability.category3.available - quantity;
+          newValPending = match.availability.category3.pending - quantity;
 
-        db.collection("Matches").updateOne(
-          { matchNumber: matchNumber },
-          { $set: { "availability.category3.pending": newValPending } }
-        );
-        match = await db
-          .collection("Matches")
-          .findOne({ matchNumber: matchNumber });
+          db.collection("Matches").updateOne(
+            { matchNumber: matchNumber },
+            { $set: { "availability.category3.available": newValAvailable } }
+          );
 
-        res.status(200).json(match);
+          db.collection("Matches").updateOne(
+            { matchNumber: matchNumber },
+            { $set: { "availability.category3.pending": newValPending } }
+          );
+          match = await db
+            .collection("Matches")
+            .findOne({ matchNumber: matchNumber });
+
+          res.status(200).json(match);
+        }
+
       }
     }
   }
