@@ -426,12 +426,12 @@ app.patch('/analytics/:type',(req,res)=>{
     db.collection('Analytics').updateOne({_id: new ObjectId('63b434deb74edeb9e898f98f')},{$inc:{pending:1}})
     res.status(200).json({message:'pending updated'})
   }
-  else{
-    if(type == 'reserved'){
+  
+  if(type == 'reserved'){
     db.collection('Analytics').updateOne({_id: new ObjectId('63b434deb74edeb9e898f98f')},{$inc:{reserved:1}})
     res.status(200).json({message:'reserved updated'})
-    }
-    else{
+  }
+  if(type == 'canceled'){
     db.collection('Analytics').updateOne({_id: new ObjectId('63b434deb74edeb9e898f98f')},{$inc:{canceled:1}})
     res.status(200).json({message:'canceled updated'})
     }
