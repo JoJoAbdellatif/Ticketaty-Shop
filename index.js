@@ -367,3 +367,51 @@ app.get("/flag/:team", (req, res) => {
         })
     });
 });
+
+app.post("/ticket",(req,res)=>{
+  const ticket = req.body
+
+  db.collection('Tickets').insertOne(ticket, async function (error, response) {
+    if(error) {
+        console.log('Error occurred while inserting');
+        res.status(400).json({error:"Error occurred while inserting"})
+
+    } else {
+       //console.log('inserted record', response.insertedId);
+      newTicket = await db.collection("Tickets").findOne({ _id: response.insertedId });
+      res.status(200).json(newTicket);
+    }
+ });
+})
+
+app.get("/ticket/:email", (req, res) => {
+  const email = req.params.email;
+
+  let tickets = [];
+
+  db.collection("Tickets")
+    .find({ email: email})
+    .forEach((ticket) => tickets.push(ticket))
+    .then(() => {
+      res.status(200).json(tickets);
+    })
+    .catch((err) => {
+      res.status(500).json({ error: "Could not fetch the tickets" });
+    });
+})
+
+app.post("/addMatch",(req,res)=>{
+  const match = req.body
+
+  db.collection('Matches').insertOne(match, async function (error, response) {
+    if(error) {
+        console.log('Error occurred while inserting');
+        res.status(400).json({error:"Error occurred while inserting"})
+
+    } else {
+       //console.log('inserted record', response.insertedId);
+      newMatch = await db.collection("Matches").findOne({ _id: response.insertedId });
+      res.status(200).json(newMatch);
+    }
+ });
+})
