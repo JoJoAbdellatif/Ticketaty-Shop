@@ -349,6 +349,7 @@ app.get("/search/:team", corsHeaders, (req, res) => {
     });
 });
 
+//Get flag image
 app.get("/flag/:team", (req, res) => {
   const team = req.params.team;
   db.collection("Flags")
@@ -368,6 +369,7 @@ app.get("/flag/:team", (req, res) => {
     });
 });
 
+//add ticket
 app.post("/ticket",(req,res)=>{
   const ticket = req.body
 
@@ -377,13 +379,13 @@ app.post("/ticket",(req,res)=>{
         res.status(400).json({error:"Error occurred while inserting"})
 
     } else {
-       //console.log('inserted record', response.insertedId);
       newTicket = await db.collection("Tickets").findOne({ _id: response.insertedId });
       res.status(200).json(newTicket);
     }
  });
 })
 
+//Get tickets by email
 app.get("/ticket/:email", (req, res) => {
   const email = req.params.email;
 
@@ -400,6 +402,7 @@ app.get("/ticket/:email", (req, res) => {
     });
 })
 
+//add new match
 app.post("/addMatch",(req,res)=>{
   const match = req.body
 
@@ -409,9 +412,29 @@ app.post("/addMatch",(req,res)=>{
         res.status(400).json({error:"Error occurred while inserting"})
 
     } else {
-       //console.log('inserted record', response.insertedId);
       newMatch = await db.collection("Matches").findOne({ _id: response.insertedId });
       res.status(200).json(newMatch);
     }
  });
+})
+
+// update analytics variables
+app.patch('/analytics/:type',(req,res)=>{
+  const type = req.params.type
+  
+  if(type == 'pending'){
+    db.collection('Analytics').updateOne({_id: new ObjectId('63b434deb74edeb9e898f98f')},{$inc:{pending:1}})
+    res.status(200).json({message:'pending updated'})
+  }
+  else{
+    if(type == 'reserved'){
+    db.collection('Analytics').updateOne({_id: new ObjectId('63b434deb74edeb9e898f98f')},{$inc:{reserved:1}})
+    res.status(200).json({message:'reserved updated'})
+    }
+    else{
+    db.collection('Analytics').updateOne({_id: new ObjectId('63b434deb74edeb9e898f98f')},{$inc:{canceled:1}})
+    res.status(200).json({message:'canceled updated'})
+    }
+  }
+
 })
