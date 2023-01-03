@@ -435,6 +435,6 @@ app.patch('/analytics/:type',(req,res)=>{
     db.collection('Analytics').updateOne({_id: new ObjectId('63b434deb74edeb9e898f98f')},{$inc:{canceled:1}})
     res.status(200).json({message:'canceled updated'})
     }
-  }
+  
 
 })
