@@ -153,7 +153,7 @@ app.patch("/pendingMatch", async (req, res) => {
 });
 
 //Reserve a ticket
-app.patch("/reserveMatch", async (req, res) => {
+app.patch("/reserveMatch", corsHeaders , async (req, res) => {
   const { matchNumber, tickets } = req.body;
   const { category, quantity } = tickets;
 
@@ -267,7 +267,7 @@ app.patch("/reserveMatch", async (req, res) => {
 });
 
 //Cancell a ticket
-app.patch("/cancellMatch", async (req, res) => {
+app.patch("/cancellMatch", corsHeaders , async (req, res) => {
   const { matchNumber, tickets } = req.body;
   const { category, quantity } = tickets;
 
@@ -350,7 +350,7 @@ app.get("/search/:team", corsHeaders, (req, res) => {
 });
 
 //Get flag image
-app.get("/flag/:team", (req, res) => {
+app.get("/flag/:team", corsHeaders , (req, res) => {
   const team = req.params.team;
   db.collection("Flags")
     .findOne({ name: team })
@@ -370,7 +370,7 @@ app.get("/flag/:team", (req, res) => {
 });
 
 //add ticket
-app.post("/ticket",(req,res)=>{
+app.post("/ticket", corsHeaders , (req,res)=>{
   const ticket = req.body
 
   db.collection('Tickets').insertOne(ticket, async function (error, response) {
@@ -386,7 +386,7 @@ app.post("/ticket",(req,res)=>{
 })
 
 //Get tickets by email
-app.get("/ticket/:email", (req, res) => {
+app.get("/ticket/:email", corsHeaders , (req, res) => {
   const email = req.params.email;
 
   let tickets = [];
@@ -403,7 +403,7 @@ app.get("/ticket/:email", (req, res) => {
 })
 
 //add new match
-app.post("/addMatch",(req,res)=>{
+app.post("/addMatch", corsHeaders , (req,res)=>{
   const match = req.body
 
   db.collection('Matches').insertOne(match, async function (error, response) {
@@ -419,7 +419,7 @@ app.post("/addMatch",(req,res)=>{
 })
 
 // update analytics variables
-app.patch('/analytics/:type',(req,res)=>{
+app.patch('/analytics/:type' , corsHeaders , (req,res)=>{
   const type = req.params.type
   
   if(type == 'pending'){
