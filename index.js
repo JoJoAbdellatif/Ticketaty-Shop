@@ -340,13 +340,18 @@ app.get("/search/:team", corsHeaders, (req, res) => {
 
   db.collection("Matches")
     .find({ $or: [{ awayTeam: regex }, { homeTeam: regex }] })
-    .forEach((match) => matches.push(match))
-    .then(() => {
+    .forEach(async (match) => matches.push(match))
+    .then(async () => {
+      for (let i = 0; i < matches.length; i++) {
+        const homeTeamFlag = await axios.get(flagUrl + matches[i].homeTeam)
+        const awayTeamFlag = await axios.get(flagUrl + matches[i].awayTeam)
+
+        matches[i].homeTeamFlag = homeTeamFlag.data
+        matches[i].awayTeamFlag = awayTeamFlag.data
+      }
+
       res.status(200).json(matches);
     })
-    .catch(() => {
-      res.status(500).json({ error: "Could not fetch the matches" });
-    });
 });
 
 //Get flag image
