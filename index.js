@@ -110,7 +110,7 @@ app.patch("/pendingMatch", async (req, res) => {
     ) {
       res.status(500).json({ message: "All tickets pending" });
     } else {
-      if (quantity > match.availability.category1.available) {
+      if (quantity > match.availability.category2.available) {
         res.status(500).json({ message: "Too much tickets" });
       } else {
         newVal = match.availability.category2.pending + quantity;
@@ -134,7 +134,7 @@ app.patch("/pendingMatch", async (req, res) => {
     ) {
       res.status(500).json({ message: "All tickets pending" });
     } else {
-      if (quantity > match.availability.category1.available) {
+      if (quantity > match.availability.category3.available) {
         res.status(500).json({ message: "Too much tickets" });
       } else {
         newVal = match.availability.category3.pending + quantity;
@@ -311,7 +311,7 @@ app.patch("/cancellMatch", corsHeaders , async (req, res) => {
   }
   if (category == 3) {
     if (
-      quantity > match.availability.category1.pending
+      quantity > match.availability.category3.pending
     ) {
       res.status(500).json({ message: "Trying to cancel a non existing ticket" });
     } else {
