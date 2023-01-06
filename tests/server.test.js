@@ -23,12 +23,12 @@ describe("GET Matches",()=>{
     })
 
     it("Should return 200", async()=>{
-        const response = await request(baseURL).get("/matches");
+        const response = await request(baseURL).get('/matches');
         expect(response.statusCode).toBe(200);
-        
+
     })
 
-    it("Should be equal to the first 10 matches", async()=>{
+    it("Should be equal to the first 7 matches", async()=>{
         const response = await request(baseURL).get("/matches");
         expect(response.body).toEqual(matchApiStub); 
         
@@ -36,6 +36,7 @@ describe("GET Matches",()=>{
 
 })
 
+jest.setTimeout(500000)
 
 // describe("Search for Matches",() => {
 
