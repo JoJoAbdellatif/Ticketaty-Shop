@@ -443,3 +443,16 @@ app.patch('/analytics/:type' , corsHeaders , (req,res)=>{
   
 
 })
+
+//get Analytics
+app.get("/analytics",corsHeaders,(req,res)=>{
+
+  db.collection("Analytics")
+      .findOne({_id: new ObjectId('63b434deb74edeb9e898f98f')})
+      .then(async (doc) => {
+        res.status(200).json(doc);
+      })
+      .catch((err) => {
+        res.status(500).json({ error: "Could not fetch the analytics" });
+      });
+})
