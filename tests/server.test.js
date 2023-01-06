@@ -1,5 +1,6 @@
 const request = require("supertest")
 const matchApiStub = require('./match.stub.json');
+const flagApiStub = require('./flag.stub.json');
 const baseURL = "http://localhost:3000"
 
 describe("GET Matches",()=>{
@@ -36,8 +37,36 @@ describe("GET Matches",()=>{
 
 })
 
+
+describe("Search for coutry flag",() => {
+
+    it("Should return 200", async()=>{
+        const response = await request(baseURL).get('/flag/Netherlands');
+        expect(response.statusCode).toBe(200);
+
+    })
+
+    it("Should return Neterlands flag", async()=>{
+        const response = await request(baseURL).get('/flag/Netherlands');
+        expect(response.body).toEqual(flagApiStub[0]);
+
+    })
+
+    it("Should return white flag with question mark", async()=>{
+        const response = await request(baseURL).get('/flag/Netherlandssssssss');
+        expect(response.body).toEqual(flagApiStub[1]);
+
+    })
+})
+
+
+
+
+
+
+
+
+
+
+
 jest.setTimeout(500000)
-
-// describe("Search for Matches",() => {
-
-// })
