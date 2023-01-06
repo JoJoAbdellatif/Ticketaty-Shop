@@ -1,7 +1,7 @@
 const request = require("supertest")
 const matchApiStub = require('./match.stub.json');
 const flagApiStub = require('./flag.stub.json');
-const baseURL = "http://localhost:3000"
+const baseURL = "http://localhost:4000"
 
 describe("GET Matches",()=>{
 

@@ -14,8 +14,8 @@ let db;
 
 connectToDb((err) => {
   if (!err) {
-    app.listen("3000", () => {
-      console.log("app listening on port 3000");
+    app.listen("4000", () => {
+      console.log("app listening on port 4000");
     });
     db = getDb();
   }
@@ -201,7 +201,7 @@ app.patch("/reserveMatch", corsHeaders , async (req, res) => {
       if (match.availability.category2.available < quantity) {
         res.status(500).json({ message: "Not enough tickets" });
       } else {
-        if (match.availability.category1.pending === 0) {
+        if (match.availability.category2.pending === 0) {
           res.status(500).json({ message: "Pend a ticket first" });
 
         }
