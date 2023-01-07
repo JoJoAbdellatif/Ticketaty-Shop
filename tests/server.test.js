@@ -1,6 +1,8 @@
 const request = require("supertest")
 const matchApiStub = require('./match.stub.json');
 const flagApiStub = require('./flag.stub.json');
+const searchApiStub = require('./search.stub.json')
+const analyticsApiStub = require('./analytics.stub.json')
 const baseURL = "http://localhost:4000"
 
 describe("GET Matches",()=>{
@@ -59,10 +61,37 @@ describe("Search for coutry flag",() => {
     })
 });
 
-// describe("",() => {
+describe("Test search api",() => {
+    
+    it("Should return 200", async()=>{
+        const response = await request(baseURL).get('/search/portu');
+        expect(response.statusCode).toBe(200);
 
+    })
 
-// });
+    it("Should return all matches that has portu in it", async()=>{
+        const response = await request(baseURL).get('/search/portu');
+        expect(response.body).toEqual(searchApiStub);
+
+    })
+
+});
+
+describe("Test analytics get api",() => {
+
+    it("Should return 200", async()=>{
+        const response = await request(baseURL).get('/analytics');
+        expect(response.statusCode).toBe(200);
+
+    })
+
+    it("Should return all matches that has portu in it", async()=>{
+        const response = await request(baseURL).get('/analytics');
+        expect(response.body).toEqual(analyticsApiStub);
+
+    })
+
+})
 
 
 

@@ -12,13 +12,13 @@
                 "price": 75
             },
             "category2": {
-                "available": 18,
-                "pending": 2,
+                "available": 20,
+                "pending": 0,
                 "price": 125
             },
             "category3": {
-                "available": 18,
-                "pending": 5,
+                "available": 20,
+                "pending": 0,
                 "price": 195
             }
         },
@@ -65,8 +65,8 @@
         "location": "Al Thumama Stadium",
         "availability": {
             "category1": {
-                "available": 10,
-                "pending": 3,
+                "available": 20,
+                "pending": 0,
                 "price": 75
             },
             "category2": {
@@ -94,8 +94,8 @@
         "location": "Ahmad Bin Ali Stadium",
         "availability": {
             "category1": {
-                "available": 19,
-                "pending": 1,
+                "available": 20,
+                "pending": 0,
                 "price": 75
             },
             "category2": {
@@ -182,7 +182,7 @@
         "availability": {
             "category1": {
                 "available": 20,
-                "pending": 2,
+                "pending": 0,
                 "price": 75
             },
             "category2": {
